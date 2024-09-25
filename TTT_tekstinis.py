@@ -34,10 +34,10 @@ def gauti_teisinga_ivesti(pranesimas):
 def gauti_teisinga_pasirinkima(pranesimas):
     while True:
         pasirinkimas = input(pranesimas).lower()
-        if pasirinkimas in ["taip", "ne"]:
+        if pasirinkimas in ["y", "n"]:
             return pasirinkimas
         else:
-            print("Neteisinga įvestis. Prašome įvesti 'taip' arba 'ne'.")
+            print("Neteisinga įvestis. Prašome įvesti 'y' arba 'n'.")
 
 def zaidimas():
     zaidejas_x_pergales = 0
@@ -83,7 +83,7 @@ def zaidimas():
         print(f"Lygiosios: {lygiosios}")
 
         pasirinkimas = gauti_teisinga_pasirinkima("Ar norite žaisti dar kartą? (y/n): ")
-        if pasirinkimas != "y":
+        if pasirinkimas == "n":
             break
 
 zaidimas()
