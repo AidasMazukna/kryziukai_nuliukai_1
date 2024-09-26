@@ -1,3 +1,6 @@
+import random
+import time
+
 def einamoji_lentele(lentele):
     for eilute in lentele:
         print(" | ".join(eilute))
@@ -27,9 +30,9 @@ def langelio_pasirinkimas(pranesimas):
             if ivestis in [0, 1, 2]:
                 return ivestis
             else:
-                print("Neteisinga įvestis. Prašome įvesti 0, 1 arba 2.")
+                print("Pasirinkimas negalimas. Prašome įvesti 0, 1 arba 2.")
         except ValueError:
-            print("Neteisinga įvestis. Prašome įvesti skaičių 0, 1 arba 2.")
+            print("Pasirinkimas negalimas. Prašome įvesti 0, 1 arba 2.")
 
 def ar_kartoti(pranesimas):
     while True:
@@ -39,25 +42,64 @@ def ar_kartoti(pranesimas):
         else:
             print("Neteisinga įvestis. Prašome įvesti 'y' arba 'n'.")
 
+def koks_rezimas():
+    while True:
+        try:
+            rezimas = int(input("Pasirinkite žaidimo režimą (1 - žaidėjas prieš žaidėją, 2 - žaidėjas prieš kompiuterį): "))
+            if rezimas in [1, 2]:
+                return rezimas
+            else:
+                print("Neteisinga įvestis. Prašome įvesti 1 arba 2.")
+        except ValueError:
+            print("Neteisinga įvestis. Prašome įvesti skaičių 1 arba 2.")
+
+def kompiuterio_ejimas(lentele):
+    print("Kompiuterio ėjimas...")
+    time.sleep(1.5)
+    for i in range(3):
+        for j in range(3):
+            if lentele[i][j] == " ":
+                lentele[i][j] = "O"
+                if laimetojas(lentele, "O"):
+                    return
+                lentele[i][j] = " "
+    for i in range(3):
+        for j in range(3):
+            if lentele[i][j] == " ":
+                lentele[i][j] = "X"
+                if laimetojas(lentele, "X"):
+                    lentele[i][j] = "O"
+                    return
+                lentele[i][j] = " "
+    while True:
+        i, j = random.randint(0, 2), random.randint(0, 2)
+        if lentele[i][j] == " ":
+            lentele[i][j] = "O"
+            return
+
 def zaidimas():
     zaidejas_x_pergales = 0
     zaidejas_o_pergales = 0
     lygiosios = 0
+    rezimas = koks_rezimas()
 
     while True:
         lentele = [[" " for _ in range(3)] for _ in range(3)]
-        zaidejas = "X"
+        zaidejas = random.choice(["X", "O"])
 
         while True:
             einamoji_lentele(lentele)
-            eilute = langelio_pasirinkimas(f"Žaidėjau {zaidejas}, įveskite eilutės numerį (0, 1, 2): ")
-            stulpelis = langelio_pasirinkimas(f"Žaidėjau {zaidejas}, įveskite stulpelio numerį (0, 1, 2): ")
+            if rezimas == 1 or (rezimas == 2 and zaidejas == "X"):
+                eilute = langelio_pasirinkimas(f"Žaidėjau {zaidejas}, įveskite eilutės numerį (0, 1, 2): ")
+                stulpelis = langelio_pasirinkimas(f"Žaidėjau {zaidejas}, įveskite stulpelio numerį (0, 1, 2): ")
 
-            if lentele[eilute][stulpelis] == " ":
-                lentele[eilute][stulpelis] = zaidejas
+                if lentele[eilute][stulpelis] == " ":
+                    lentele[eilute][stulpelis] = zaidejas
+                else:
+                    print("Šis langelis jau užimtas. Pasirinkite kitą vietą.")
+                    continue
             else:
-                print("Šis langelis jau užimtas. Pasirinkite kitą vietą.")
-                continue
+                kompiuterio_ejimas(lentele)
 
             if laimetojas(lentele, zaidejas):
                 einamoji_lentele(lentele)
